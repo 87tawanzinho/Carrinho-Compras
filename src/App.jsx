@@ -26,12 +26,52 @@ function randomNumber(min, max) {
 function App() {
   const [cart, setCart] = useState([]);
 
+  const productObject = {
+    name: "produto",
+    category: "categoria",
+    price: randomNumber(200, 600),
+    quantity: 1,
+  };
+
   const fetchData = () => {
     api.get("/cart").then((response) => setCart(response.data)); // receive itens from api
   };
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleAddItem = () => {
+    api.post("/cart", productObject).then((response) => {
+      fetchData(); // preenche a state com o novo item
+    });
+  };
+
+  const handleRemoveItem = (item) => {
+    // passe a função para dentro do componente via props
+    api.delete("/cart/" + item).then((res) => {
+      fetchData();
+    });
+    console.log(item);
+  };
+
+  const handleUpdatedItem = (item, action) => {
+    if (action === "increase") {
+      item.quantity += 1;
+    }
+
+    if (action === "decrease") {
+      if (item.quantity === 1) {
+        alert("não pode tirar mais que isso");
+      }
+      item.quantity -= 1;
+    }
+    const newData = { ...item, quantity: item.quantity };
+    api.put("/cart" + item.id, newData).then((res) => {
+      console.log(newData);
+      console.log(response);
+      fetchData();
+    });
+  };
   return (
     <>
       <PageHeader />
@@ -39,6 +79,12 @@ function App() {
         <PageTitle data={"Seu carrinho"} />
         <div className="content">
           <section>
+            <button
+              onClick={handleAddItem}
+              style={{ padding: "5px 10px", marginBottom: "15px" }}
+            >
+              Add to cart
+            </button>
             <table>
               <thead>
                 <tr>
@@ -59,8 +105,16 @@ function App() {
                 ) : (
                   cart.map(
                     (
-                      item // percorre tudo que esta no cart
-                    ) => <TableRow />
+                      item,
+                      index // percorre tudo que esta no cart
+                    ) => (
+                      <TableRow
+                        key={index}
+                        data={item}
+                        handleRemoveItem={handleRemoveItem}
+                        handleUpdatedItem={handleUpdatedItem}
+                      />
+                    )
                   )
                 )}
               </tbody>
