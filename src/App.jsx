@@ -17,13 +17,21 @@ import PageHeader from "./layout/PageHeader";
 import PageTitle from "./layout/PageTitle";
 import Summary from "./Summary";
 import TableRow from "./TableRow";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { api } from "./provider";
 
 function randomNumber(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 function App() {
   const [cart, setCart] = useState([]);
+
+  const fetchData = () => {
+    api.get("/cart").then((response) => setCart(response.data)); // receive itens from api
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <>
       <PageHeader />
