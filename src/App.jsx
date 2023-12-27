@@ -11,20 +11,25 @@ todo - cálculo do preço total dos itens inseridos
 
 todo - FUNCIONALIDADE EXTRA: aplicação de cupom de desconto
 */
-import './styles.scss';
+import "./styles.scss";
 
-import PageHeader from './layout/PageHeader';
-import PageTitle from './layout/PageTitle';
-import Summary from './Summary';
-import TableRow from './TableRow';
+import PageHeader from "./layout/PageHeader";
+import PageTitle from "./layout/PageTitle";
+import Summary from "./Summary";
+import TableRow from "./TableRow";
+import { useState } from "react";
 
+function randomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
 function App() {
+  const [cart, setCart] = useState([]);
   return (
     <>
       <PageHeader />
       <main>
-        <PageTitle data={'Seu carrinho'} />
-        <div className='content'>
+        <PageTitle data={"Seu carrinho"} />
+        <div className="content">
           <section>
             <table>
               <thead>
@@ -37,7 +42,15 @@ function App() {
                 </tr>
               </thead>
               <tbody>
-                <TableRow />
+                {cart.length === 0 ? (
+                  <>Não há itens no carrinho</>
+                ) : (
+                  cart.map(
+                    (
+                      item // percorre tudo que esta no cart
+                    ) => <TableRow />
+                  )
+                )}
               </tbody>
             </table>
           </section>
