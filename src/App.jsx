@@ -43,7 +43,11 @@ function App() {
               </thead>
               <tbody>
                 {cart.length === 0 ? (
-                  <>Não há itens no carrinho</>
+                  <tr>
+                    <td colSpan={"5"} style={{ textAlign: "center" }}>
+                      Não há itens em seu carrinho.
+                    </td>
+                  </tr>
                 ) : (
                   cart.map(
                     (
